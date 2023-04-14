@@ -5,7 +5,7 @@ import Notification from './components/Notification';
 import './App.css';
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(null);
   const [newNote, setNewNote] = useState('a new note...');
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -55,6 +55,12 @@ const App = () => {
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
+
+  // do not render anything if notes is still null
+  if (!notes) {
+    return null;
+  }
+
   return (
     <div>
       <h1>Notes</h1>
