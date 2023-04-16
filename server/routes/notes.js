@@ -8,26 +8,25 @@ router.get('/', async (req, res, next) => {
   res.status(200).json(notes);
 });
 
-router.get('/:id', (req, res, next) => {
-  const id = Number(req.params.id);
-  const note = notes.find((note) => note.id === id);
+router.get('/:id', async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const note = await Note.findById(id);
 
-  note ? res.status(200).json(note) : res.status(400).end();
+    note ? res.status(200).json(note) : res.status(400).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id);
-  notes = notes.filter((note) => note.id !== id);
+  await Note.findByIdAndRemove(id);
 
   res.status(204).end();
 });
 
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
 
   if (!body.content) {
@@ -36,13 +35,27 @@ router.post('/', (req, res) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
+  await note.save();
 
   res.json(note);
+});
+
+router.put('/:id', (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
 });
