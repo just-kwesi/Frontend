@@ -1,36 +1,10 @@
 const router = require('express').Router();
+const Note = require('../db/Notes');
 
 module.exports = router;
 
-let notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    important: false,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    important: true,
-  },
-  {
-    content: 'a new note',
-    important: false,
-    id: 4,
-  },
-  {
-    content: 'good to be back',
-    important: true,
-    id: 5,
-  },
-];
-
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
+  const notes = await Note.find();
   res.status(200).json(notes);
 });
 
