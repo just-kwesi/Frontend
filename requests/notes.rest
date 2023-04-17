@@ -3,6 +3,7 @@ GET http://localhost:3001/api/notes
 ###
 POST http://localhost:3001/api/notes 
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0M2Q1YzdjMTkxM2JhOTQzOTQzYmY1YSIsImlhdCI6MTY4MTc0Njc2Nn0.qLdDC9WPYbjV-TSi_t1nL1j7pDPrgMRjgjoRf_SrEWc
 
 {
     "content": "Rest Client is a wonder",
