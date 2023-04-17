@@ -5,6 +5,7 @@ const noteSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true,
+      minLength: 5,
     },
     important: {
       type: Boolean,

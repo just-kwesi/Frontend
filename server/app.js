@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config({ path: './config.env' });
 
-//DB Connection
+// DB Connection
 
 const url = process.env.DB_URL.replace('<password>', process.env.DB_PASSWORD);
 mongoose.set('strictQuery', false);
@@ -33,6 +33,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
+  }
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);

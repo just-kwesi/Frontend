@@ -23,7 +23,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "json-server --port 3001 --watch ./utils/db.json",
-    "dev": "nodemon server/app.js"
+    "dev": "nodemon server/app.js",
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +45,9 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^8.38.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
     "json-server": "^0.17.3",
     "nodemon": "^2.0.22"
   }

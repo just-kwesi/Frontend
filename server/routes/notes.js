@@ -4,8 +4,12 @@ const Note = require('../db/Notes');
 module.exports = router;
 
 router.get('/', async (req, res, next) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
+  try {
+    const notes = await Note.find();
+    res.status(200).json(notes);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/:id', async (req, res, next) => {
@@ -46,14 +50,13 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', (request, response, next) => {
-  const body = request.body;
+  const { content, important } = request.body;
 
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then((updatedNote) => {
       response.json(updatedNote);
     })
