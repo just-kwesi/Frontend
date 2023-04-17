@@ -10,6 +10,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
     "react": "^18.2.0",
@@ -23,9 +24,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "json-server --port 3001 --watch ./utils/db.json",
-    "dev": "nodemon server/app.js",
+    "dev": "NODE_ENV=development nodemon server/index.js",
     "lint": "eslint .",
-    "test:jest": "jest --verbose"
+    "test:jest": "NODE_ENV=test jest --verbose --runInBand"
   },
   "eslintConfig": {
     "extends": [
@@ -51,7 +52,8 @@
     "eslint-plugin-import": "^2.27.5",
     "jest": "^27.5.1",
     "json-server": "^0.17.3",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node"

@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+require('express-async-errors');
+
 const logger = require('../utils/logger');
 const config = require('../utils/config');
 const middleware = require('../utils/middleware');
@@ -34,7 +36,4 @@ app.use('/api', require('./routes'));
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
-const PORT = config.PORT || 3001;
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
-});
+module.exports = app;
