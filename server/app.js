@@ -2,17 +2,20 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
-require('dotenv').config({ path: './config.env' });
+
+const logger = require('../utils/logger');
+const config = require('../utils/config');
+const middleware = require('../utils/middleware');
 
 // DB Connection
 
-const url = process.env.DB_URL.replace('<password>', process.env.DB_PASSWORD);
+const url = config.MONGO_URL;
 mongoose.set('strictQuery', false);
 mongoose
   .connect(url)
-  .then(() => console.log(`db connection successful`))
+  .then(() => logger.info(`db connection successful`))
   .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message);
+    logger.info('error connecting to MongoDB:', error.message);
   });
 
 const app = express();
@@ -28,23 +31,10 @@ app.use(morgan('dev'));
 
 app.use('/api', require('./routes'));
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' });
-  }
-  if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message });
-  }
-
-  next(error);
-};
-
-// this has to be the last loaded middleware.
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 3001;
+const PORT = config.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });
