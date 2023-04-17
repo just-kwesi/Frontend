@@ -1,11 +1,15 @@
 const router = require('express').Router();
 const Note = require('../db/Notes');
+const User = require('../db/User');
 
 module.exports = router;
 
 router.get('/', async (req, res, next) => {
   try {
-    const notes = await Note.find();
+    const notes = await Note.find({}).populate('user', {
+      username: 1,
+      name: 1,
+    });
     res.status(200).json(notes);
   } catch (error) {
     next(error);
@@ -28,13 +32,17 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const body = req.body;
+  const user = await User.findById(body.userId);
 
   const note = new Note({
     content: body.content,
-    important: body.important || false,
+    important: body.important === undefined ? false : body.important,
+    user: user.id,
   });
 
   const savedNote = await note.save();
+  user.notes = user.notes.concat(savedNote._id);
+  await user.save();
 
   res.status(201).json(savedNote);
 });
